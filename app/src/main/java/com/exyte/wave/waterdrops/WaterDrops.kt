@@ -100,9 +100,11 @@ fun WavesDrawing(
         duration = waveDuration
     )
 
+    // Reverse the water level calculation - subtract from container height
     val waterLevel by remember(waveProgress, containerSize.height) {
         derivedStateOf {
-            (waveProgress * containerSize.height).toInt()
+            // Invert the progress to make it go from bottom to top
+            ((1 - waveProgress) * containerSize.height).toInt()
         }
     }
 

@@ -81,4 +81,4 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-const val waveGap = 30
+const val waveGap = 20
