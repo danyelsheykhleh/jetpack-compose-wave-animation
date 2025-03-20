@@ -1,6 +1,8 @@
 package com.exyte.wave.animating
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
@@ -33,10 +35,10 @@ fun waveProgressAsState(
 
             WaterLevelState.Animating -> {
                 animatable.animateTo(
-                    targetValue = 0.7f,
+                    targetValue = 0.95f,
                     animationSpec = tween(
                         durationMillis = timerDurationInMillis.toInt(),
-                        easing = LinearEasing
+                        easing = FastOutSlowInEasing
                     )
                 )
             }

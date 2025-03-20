@@ -37,16 +37,18 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             WaveTheme {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Surface(
-                        modifier = Modifier.size(300.dp).clip(CircleShape),
+                        modifier = Modifier
+                            .size(200.dp)
+                            .clip(CircleShape),
                     ) {
                         val screenWidth = LocalConfiguration.current.screenWidthDp
                         val points = remember { screenWidth / waveGap }
                         var waterLevelState by remember { mutableStateOf(WaterLevelState.StartReady) }
                         WaterDropLayout(
                             modifier = Modifier,
-                            waveDurationInMills = 5000L,
+                            waveDurationInMills = 2500,
                             waterLevelState = waterLevelState,
                             onWavesClick = {
                                 waterLevelState =
@@ -55,22 +57,10 @@ class MainActivity : ComponentActivity() {
                                     } else {
                                         WaterLevelState.Animating
                                     }
-                            }
-                        ) {
-                            WaterDropText(
-                                modifier = Modifier,
-                                align = Alignment.Center,
-                                textStyle = TextStyle(
-                                    color = Color.Black,
-                                    fontSize = 80.sp,
-                                    fontWeight = FontWeight.Bold,
-                                ),
-                                waveParams = WaveParams(
-                                    pointsQuantity = points,
-                                    maxWaveHeight = 30f
-                                ),
-                            )
-                        }
+                            }, waveParams = WaveParams(
+                                pointsQuantity = points,
+                                maxWaveHeight = 30f
+                            ))
                     }
                 }
             }

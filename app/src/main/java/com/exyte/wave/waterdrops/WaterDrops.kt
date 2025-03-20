@@ -40,9 +40,9 @@ fun WaterDropLayout(
     waveDurationInMills: Long = 6000L,
     waterLevelState: WaterLevelState,
     onWavesClick: () -> Unit,
-    content: () -> WaterDropText,
+    waveParams: WaveParams,
 ) {
-    val waveParams = remember { content().waveParams }
+    val waveParams = remember { waveParams }
     val animations = createAnimationsAsState(pointsQuantity = waveParams.pointsQuantity)
     WaterLevelDrawing(
         modifier = modifier,
@@ -51,7 +51,6 @@ fun WaterDropLayout(
         animations = animations,
         waterLevelState = waterLevelState,
         onWavesClick = onWavesClick,
-        content = content,
     )
 }
 
@@ -63,7 +62,6 @@ fun WaterLevelDrawing(
     animations: MutableList<State<Float>>,
     waterLevelState: WaterLevelState,
     onWavesClick: () -> Unit,
-    content: () -> WaterDropText,
 ) {
     val waveDuration by rememberSaveable { mutableStateOf(waveDurationInMills) }
     val waveProgress by waveProgressAsState(
@@ -77,7 +75,6 @@ fun WaterLevelDrawing(
         waveProgress = waveProgress,
         waveParams = waveParams,
         onWavesClick = onWavesClick,
-        content = content,
     )
 }
 
@@ -89,7 +86,6 @@ fun WavesDrawing(
     animations: MutableList<State<Float>>,
     waveProgress: Float,
     onWavesClick: () -> Unit,
-    content: () -> WaterDropText,
 ) {
     val elementParams by remember { mutableStateOf(ElementParams()) }
     var containerSize by remember { mutableStateOf(IntSize(0, 0)) }
@@ -103,7 +99,6 @@ fun WavesDrawing(
     // Reverse the water level calculation - subtract from container height
     val waterLevel by remember(waveProgress, containerSize.height) {
         derivedStateOf {
-            // Invert the progress to make it go from bottom to top
             ((1 - waveProgress) * containerSize.height).toInt()
         }
     }
@@ -117,30 +112,22 @@ fun WavesDrawing(
             height = containerSize.height
         )
     )
-    
-    // Adjust the level state to use the full container height
+
     val levelState = createLevelAsState(
-        waterLevelProvider = { waterLevel },
+        waterLevelProvider = { 1 },  // here is what prevent jumping when target is >= 0.7 and animation reach at that stage -> using waterLevel cause problem!
         bufferY = waveParams.bufferY,
         elementParams = waveElementParams
     )
 
     val paths = createPathsAsState(
         containerSize = containerSize,
-        elementParams = waveElementParams, // Use the wave-specific params
+        elementParams = waveElementParams,
         levelState = levelState.value,
         waterLevelProvider = { waterLevel.toFloat() },
         dropWaterDuration = dropWaterDuration,
         animations = animations,
         waveParams = waveParams
     )
-
-    // We don't need text params anymore since we're not applying the blend mode
-    // val textParams = createTextParamsAsState(
-    //     textStyle = content().textStyle,
-    //     waveProgress = waveProgress,
-    //     elementParams = elementParams
-    // )
 
     Canvas(
         modifier = Modifier

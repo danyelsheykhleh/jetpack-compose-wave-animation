@@ -1,6 +1,7 @@
 package com.exyte.wave.waterdrops.canvas
 
 import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
@@ -18,7 +19,7 @@ fun DrawScope.drawWaves(
 ) {
     drawIntoCanvas {
         it.drawPath(paths.pathList[1], paint.apply {
-            color = Blue
+            color = Color.Red
         })
         it.drawPath(paths.pathList[0], paint.apply {
             color = androidx.compose.ui.graphics.Color.Black
