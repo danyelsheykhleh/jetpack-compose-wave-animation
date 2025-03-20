@@ -1,0 +1,31 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+buildscript {
+    ext {
+        compose_ui_version = '1.4.3'
+    }
+}
+plugins {
+    id 'com.android.application' version '7.4.0' apply false
+    id 'com.android.library' version '7.4.0' apply false
+    id 'org.jetbrains.kotlin.android' version '1.8.10' apply false
+}
+
+subprojects {
+    tasks.withType(KotlinCompile).configureEach {
+        kotlinOptions {
+            if (project.findProperty("waveApp.enableComposeCompilerReports") == "true") {
+                freeCompilerArgs += [
+                        "-P",
+                        "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
+                                project.buildDir.absolutePath + "/compose_metrics"
+                ]
+                freeCompilerArgs += [
+                        "-P",
+                        "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
+                                project.buildDir.absolutePath + "/compose_metrics"
+                ]
+            }
+        }
+    }
+}
