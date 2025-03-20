@@ -108,15 +108,26 @@ fun WavesDrawing(
         }
     }
 
+    // Create a separate element params for the wave that doesn't depend on text position
+    val waveElementParams = ElementParams(
+        // Use fixed positions that don't depend on container size or text
+        position = Offset(0f, 0f),
+        size = IntSize(
+            width = containerSize.width,
+            height = containerSize.height
+        )
+    )
+    
+    // Adjust the level state to use the full container height
     val levelState = createLevelAsState(
         waterLevelProvider = { waterLevel },
         bufferY = waveParams.bufferY,
-        elementParams = elementParams
+        elementParams = waveElementParams
     )
 
     val paths = createPathsAsState(
         containerSize = containerSize,
-        elementParams = elementParams,
+        elementParams = waveElementParams, // Use the wave-specific params
         levelState = levelState.value,
         waterLevelProvider = { waterLevel.toFloat() },
         dropWaterDuration = dropWaterDuration,
@@ -124,11 +135,12 @@ fun WavesDrawing(
         waveParams = waveParams
     )
 
-    val textParams = createTextParamsAsState(
-        textStyle = content().textStyle,
-        waveProgress = waveProgress,
-        elementParams = elementParams
-    )
+    // We don't need text params anymore since we're not applying the blend mode
+    // val textParams = createTextParamsAsState(
+    //     textStyle = content().textStyle,
+    //     waveProgress = waveProgress,
+    //     elementParams = elementParams
+    // )
 
     Canvas(
         modifier = Modifier
@@ -142,21 +154,17 @@ fun WavesDrawing(
         modifier = modifier
             .clickable(onClick = onWavesClick)
             .onGloballyPositioned { containerSize = IntSize(it.size.width, it.size.height) }
-            .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
-            .drawWithContent {
-                drawTextWithBlendMode(mask = paths.pathList[0], textParams = textParams.value)
-            }
     ) {
-        Text(
-            modifier = content().modifier
-                .align(content().align)
-                .onGloballyPositioned {
-                    elementParams.position = it.positionInParent()
-                    elementParams.size = it.size
-                },
-            text = "46FT",
-            style = content().textStyle
-        )
+//        Text(
+//            modifier = content().modifier
+//                .align(content().align)
+//                .onGloballyPositioned {
+//                    elementParams.position = it.positionInParent()
+//                    elementParams.size = it.size
+//                },
+//            text = "46FT",
+//            style = content().textStyle
+//        )
     }
 }
 
