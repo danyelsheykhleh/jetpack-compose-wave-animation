@@ -35,7 +35,7 @@ fun waveProgressAsState(
 
             WaterLevelState.Animating -> {
                 animatable.animateTo(
-                    targetValue = 0.95f,
+                    targetValue = 0.5f,
                     animationSpec = tween(
                         durationMillis = timerDurationInMillis.toInt(),
                         easing = FastOutSlowInEasing

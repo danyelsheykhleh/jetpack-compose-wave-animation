@@ -22,7 +22,7 @@ fun DrawScope.drawWaves(
             color = Color.Red
         })
         it.drawPath(paths.pathList[0], paint.apply {
-            color = androidx.compose.ui.graphics.Color.Black
+            color = Color(0xff96DC9D)
             alpha = 0.9f
         })
     }
